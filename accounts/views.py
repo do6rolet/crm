@@ -3,8 +3,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.forms import inlineformset_factory
 from .models import *
 from .forms import OrderForm
+from django.urls import reverse
 
-
+def get_url(parent_url, pk):
+    return reverse(parent_url, args=[str(pk)])
 
 def dashboard(request):
     orders = Order.objects.all()
@@ -22,12 +24,12 @@ def products(request):
     return render(request, 'accounts/products.html', {'products': products})
 
 
-def customer(request, pk):
+def customer_details(request, pk):
     customer = Customer.objects.get(id=pk)
     orders = customer.order_set.all()
     orders_count = orders.count()
     context = {'customer': customer, 'orders': orders, 'orders_count': orders_count}
-    return render(request, 'accounts/customer.html', context)
+    return render(request, 'accounts/customer_details.html', context)
 
 
 def createOrder(request, pk):
@@ -38,8 +40,7 @@ def createOrder(request, pk):
         formset = OrderFormSet(request.POST, instance=customer)
         if formset.is_valid():
             formset.save()
-            url = '/customer/' + str(pk) + '/'
-            return redirect(url)
+            return redirect(get_url('customer_details', pk))
     context = {'formset': formset, }
     return render(request, 'accounts/order_form_customer.html', context)
 
@@ -51,9 +52,8 @@ def updateOrder(request, whereis, pk):
         form = OrderForm(request.POST, instance=order)
         if form.is_valid():
             form.save()
-            if whereis == 'customer':
-                url = '/customer/' + str(order.customer.id) + '/'
-                return redirect(url)
+            if whereis == 'customer_details':
+                return redirect(get_url(whereis, order.customer.pk))
             return redirect('/')
     context = {'form': form}
     return render(request, 'accounts/order_form.html', context)
@@ -63,9 +63,8 @@ def updateOrder(request, whereis, pk):
 def deleteOrder(request, whereis, pk):
     order = Order.objects.get(id=pk)
     order.delete()
-    if whereis == 'customer':
-        url = '/customer/' + str(order.customer.id) + '/'
-        return redirect(url)
+    if whereis == 'customer_details':
+        return redirect(get_url(whereis, order.customer.pk))
     return redirect('/')
 
 

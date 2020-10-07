@@ -11,7 +11,8 @@
                 <h5>Customer: {{ customer.name }}</h5>
                 <hr>
                 <a href="#" class="btn btn-outline-info btn-sm btn-block">Update Customer</a>
-                <a href="{%  url 'create_order' customer.id %}" class="btn btn-outline-info btn-sm btn-block">Place Order</a>
+                <a href="{% url 'create_order' customer.id %}" class="btn btn-outline-info btn-sm btn-block">Place
+                    Order</a>
             </div>
         </div>
         <div class="col-md">
@@ -59,15 +60,17 @@
                             <td>{{ order.product.category }}</td>
                             <td>{{ order.date_created }}</td>
                             <td>{{ order.status }}</td>
-                            <td><a class="btn btn-sm btn-info" href="{% url 'update_order' 'customer' order.id %}">Update</a></td>
+                            <td><a class="btn btn-sm btn-info"
+                                   href="{% url 'update_order' 'customer_details' order.id %}">Update</a></td>
                             <td>
-                                <a  href="{% url 'delete_order' 'customer' order.id %}">
-                                    <input class="btn btn-sm btn-danger" type="submit" onclick="return confirm('Are you sure?')" value="Remove" />
+                                <a href="{% url 'delete_order' 'customer_details' order.id %}">
+                                    <input class="btn btn-sm btn-danger" type="submit"
+                                           onclick="return confirm('Are you sure?')" value="Remove"/>
                                 </a></td>
-                        </tr>                    
+                        </tr>
                     {% endfor %}
                 </table>
             </div>
         </div>
-     </div>
+    </div>
 {% endblock %}

@@ -20,7 +20,7 @@
                     {% for customer in customers %}
                         <tr>
                             <td></td>
-                            <td><a href="{% url 'customer' customer.id %}">{{ customer.name }}</a></td>
+                            <td><a href="{{ customer.get_absolute_url }}">{{ customer.name }}</a></td>
                             <td>{{ customer.phone }}</td>
                         </tr>
                     {% endfor %}
